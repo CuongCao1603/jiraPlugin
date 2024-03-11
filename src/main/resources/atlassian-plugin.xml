@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="ao-tutorial"/>
+  <!-- add our web resources -->
+  <web-resource key="ao-tutorial-resources" name="ao-tutorial Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="ao-tutorial.css" location="/css/ao-tutorial.css"/>
+    <resource type="download" name="ao-tutorial.js" location="/js/ao-tutorial.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>ao-tutorial</context>
+  </web-resource>
+  <ao key="ao-module">
+    <description>The module configuring the Active Objects service used by this plugin</description>
+    <entity>com.atlassian.tutorial.ao.todo.Todo</entity>
+    <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v1.TodoUpgradeTask001</upgradeTask>
+    <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v2.TodoUpgradeTask002</upgradeTask>
+  </ao>
+  <servlet name="Todo List &amp; Add Servlet" class="com.atlassian.tutorial.ao.todo.TodoServlet" key="todo-list">
+    <description>A servlet to add and list todos</description>
+    <url-pattern>/todo/list</url-pattern>
+  </servlet>
+<!--  <web-section name="My CRUD" i18n-name-key="my-crud.name" key="my-crud" location="system.top.navigation.bar" weight="1000">-->
+<!--    <description key="my-crud.description">The My CRUD Plugin</description>-->
+<!--    <label key="my-crud.label"/>-->
+<!--  </web-section>-->
+<!--  <web-item name="Custom Button" i18n-name-key="custom-button.name" key="custom-button" section="system.top.navigation.bar" weight="1000">-->
+<!--    <description key="custom-button.description">The Custom Button Plugin</description>-->
+<!--    <label key="custom-button.label"/>-->
+<!--    <link linkId="custom-button-link">http://www.atlassian.com</link>-->
+<!--  </web-item>-->
+<!--  <web-item name="Issue CRUD" i18n-name-key="issue-crud.name" key="issue-crud" parent="custom-button" section="system.top.navigation.barCRUD" weight="1000">-->
+<!--    <description key="issue-crud.description">The Issue CRUD Plugin</description>-->
+<!--    <label key="issue-crud.label"></label>-->
+<!--    <link linkId="issue-crud-link">/todo/list</link>-->
+<!--  </web-item>-->
+
+  <web-section name="My Links Main Section" i18n-name-key="my-links-main-section.name" key="my_links_section" location="my_links_link" weight="10" />
+  <web-item key="my_links_link" name="Link on My Links Main Section" section="system.top.navigation.bar" weight="47">
+    <label>Custom Button</label>
+    <link linkId="my_links_link">http://www.atlassian.com</link>
+  </web-item>
+
+  <web-item key="documentation_link" name="Documentation Web Site" section="my_links_link/my_links_section" weight="10">
+    <label>CRUD</label>
+    <link linkId="documentation_link">/plugins/servlet/todo/list</link>
+  </web-item>
+</atlassian-plugin>
