@@ -56,7 +56,7 @@
                     <tbody>
                         #foreach( $issue in $issues )
                         <tr class="issue-line">
-                            <td class="issue-key">$issue.getKey()</td>
+##                            <td class="issue-key">$issue.getKey()</td>
                             <td class="issue-summary">$issue.getSummary()</td>
                             <td class="issue-description">
                                 #if($issue.getDescription())
@@ -64,10 +64,10 @@
                                  #end
                             </td>
                             <td>
-                                $issue.getAssignee().getName()
+##                                $issue.getAssignee().getName()
                             </td>
                             <td>
-                                $issue.getReporter().getName()
+##                                $issue.getReporter().getName()
                             </td>
                             <td>
                                 <a href="issuecrud?actionType=edit&key=$issue.getKey()" class="edit-issue">Edit</a>

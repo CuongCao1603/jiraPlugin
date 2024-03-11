@@ -97,7 +97,7 @@ public final class TodoServlet extends HttpServlet
 //                templateRenderer.render(EDIT_ISSUE_TEMPLATE, context, resp.getWriter());
 //                break;
             default:
-                List<Issue> issues = getIssues();
+                List<Todo> issues = todoList();
                 context.put("issues", issues);
                 templateRenderer.render(LIST_ISSUES_TEMPLATE, context, resp.getWriter());
         }
@@ -145,14 +145,7 @@ public final class TodoServlet extends HttpServlet
 //    }
 
 
-    /**
-     * Retrieve issues using simple JQL query project="TUTORIAL"
-     * Pagination is set to unlimited
-     *
-     * @return List of issues
-     */
     private List<Issue> getIssues() {
-
         ApplicationUser user = authenticationContext.getLoggedInUser();
         JqlClauseBuilder jqlClauseBuilder = JqlQueryBuilder.newClauseBuilder();
         Query query = jqlClauseBuilder.project("TUTORIAL").buildQuery();
@@ -164,8 +157,49 @@ public final class TodoServlet extends HttpServlet
         } catch (SearchException e) {
             e.printStackTrace();
         }
-        return searchResults != null ? searchResults.getIssues() : null;
+        return searchResults != null ? searchResults.getIssues() : new ArrayList<>();
     }
+
+    public List<Todo> todoList() {
+
+//        List<Issue> issues = getIssues();
+
+
+
+        return todoService.all();
+    }
+
+//    private Todo createTodoFromIssue(Issue issue) {
+//        ApplicationUser assignee = issue.getAssignee();
+//        String summary = issue.getSummary();
+//        String description = issue.getDescription();
+//        boolean complete = /* Bạn phải lấy thông tin complete từ Issue hoặc set mặc định */;
+//
+//        Todo todo = todoService.add(summary, description, assignee.getUsername(), complete);
+//        return todo;
+//    }
+
+    /**
+     * Retrieve issues using simple JQL query project="TUTORIAL"
+     * Pagination is set to unlimited
+     *
+     * @return List of issues
+     */
+//    private List<Issue> getIssues() {
+//
+//        ApplicationUser user = authenticationContext.getLoggedInUser();
+//        JqlClauseBuilder jqlClauseBuilder = JqlQueryBuilder.newClauseBuilder();
+//        Query query = jqlClauseBuilder.project("TUTORIAL").buildQuery();
+//        PagerFilter pagerFilter = PagerFilter.getUnlimitedFilter();
+//
+//        SearchResults searchResults = null;
+//        try {
+//            searchResults = searchService.search(user, query, pagerFilter);
+//        } catch (SearchException e) {
+//            e.printStackTrace();
+//        }
+//        return searchResults != null ? searchResults.getIssues() : null;
+//    }
 
 
 

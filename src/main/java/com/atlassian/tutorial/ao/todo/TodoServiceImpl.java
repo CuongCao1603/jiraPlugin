@@ -75,59 +75,60 @@ public class TodoServiceImpl implements TodoService
     {
         return ao.create(User.class, ImmutableMap.<String, Object>of("NAME", userName));
     }
-    protected void doGett(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        if (!enforceLoggedIn(req, res)) {
-            return;
-        }
 
-        final PrintWriter w = res.getWriter();
-        w.printf("<h1>Todos (%s)</h1>", userManager.getRemoteUser().getUsername());
-
-        // Form to add new TODOs
-        w.write("<form method=\"post\">");
-        w.write("<input type=\"text\" name=\"task\" size=\"25\" placeholder=\"Enter new task\"/>");
-        w.write("&nbsp;&nbsp;");
-        // Add input for User field
-        w.write("<input type=\"text\" name=\"user\" size=\"25\" placeholder=\"Assign to\"/>");
-        // Dropdown menu for status
-        w.write("<select name=\"status\">");
-        w.write("<option value=\"complete\">Complete</option>");
-        w.write("<option value=\"submit\">Submit</option>");
-        w.write("<option value=\"draft\">Draft</option>");
-        w.write("</select>");
-        w.write("&nbsp;&nbsp;");
-        w.write("<input type=\"submit\" name=\"submit\" value=\"Add\"/>");
-        w.write("</form>");
-
-        w.write("<ol>");
-
-        for (Todo todo : todoService.all()) {
-            w.print("<li>");
-            w.printf("<strong>Description:</strong> %s <br>", todo.getDescription());
-            w.printf("<strong>User:</strong> %s <br>", todo.getUser().getName());
-            w.printf("<strong>Complete:</strong> %s <br>", todo.isComplete() ? "Yes" : "No");
-            w.print("</li>");
-        }
-
-        w.write("</ol>");
-        w.write("<script language='javascript'>document.forms[0].elements[0].focus();</script>");
-
-        w.close();
-    }
-
-    protected void doPostt(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
-        if (!enforceLoggedIn(req, res))
-        {
-            return;
-        }
-
-        final String description = req.getParameter("task");
-        final String user = req.getParameter("user");
-        final String status = (req.getParameter("complete"));
-
-        todoService.add(description, user);
-        res.sendRedirect(req.getContextPath() + "/plugins/servlet/todo/list");
-    }
+//    protected void doGett(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+//        if (!enforceLoggedIn(req, res)) {
+//            return;
+//        }
+//
+//        final PrintWriter w = res.getWriter();
+//        w.printf("<h1>Todos (%s)</h1>", userManager.getRemoteUser().getUsername());
+//
+//        // Form to add new TODOs
+//        w.write("<form method=\"post\">");
+//        w.write("<input type=\"text\" name=\"task\" size=\"25\" placeholder=\"Enter new task\"/>");
+//        w.write("&nbsp;&nbsp;");
+//        // Add input for User field
+//        w.write("<input type=\"text\" name=\"user\" size=\"25\" placeholder=\"Assign to\"/>");
+//        // Dropdown menu for status
+//        w.write("<select name=\"status\">");
+//        w.write("<option value=\"complete\">Complete</option>");
+//        w.write("<option value=\"submit\">Submit</option>");
+//        w.write("<option value=\"draft\">Draft</option>");
+//        w.write("</select>");
+//        w.write("&nbsp;&nbsp;");
+//        w.write("<input type=\"submit\" name=\"submit\" value=\"Add\"/>");
+//        w.write("</form>");
+//
+//        w.write("<ol>");
+//
+//        for (Todo todo : todoService.all()) {
+//            w.print("<li>");
+//            w.printf("<strong>Description:</strong> %s <br>", todo.getDescription());
+//            w.printf("<strong>User:</strong> %s <br>", todo.getUser().getName());
+//            w.printf("<strong>Complete:</strong> %s <br>", todo.isComplete() ? "Yes" : "No");
+//            w.print("</li>");
+//        }
+//
+//        w.write("</ol>");
+//        w.write("<script language='javascript'>document.forms[0].elements[0].focus();</script>");
+//
+//        w.close();
+//    }
+//
+//    protected void doPostt(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+//    {
+//        if (!enforceLoggedIn(req, res))
+//        {
+//            return;
+//        }
+//
+//        final String description = req.getParameter("task");
+//        final String user = req.getParameter("user");
+//        final String status = (req.getParameter("complete"));
+//
+//        todoService.add(description, user);
+//        res.sendRedirect(req.getContextPath() + "/plugins/servlet/todo/list");
+//    }
 
 }
