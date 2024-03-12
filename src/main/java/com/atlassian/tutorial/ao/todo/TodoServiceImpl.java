@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,23 +38,63 @@ public class TodoServiceImpl implements TodoService
     }
 
     @Override
-    public Todo add(String description, String summary)
+    public Todo add(String description)
     {
         User user = getOrCreateUser(ao, currentUserName());
         final Todo todo = ao.create(Todo.class, new DBParam("USER_ID", user.getID()));
         todo.setDescription(description);
-//        todo.setComplete(status.equalsIgnoreCase("true")? true : false);
-//        todo.setUser(username);
+        todo.setComplete(false);
         todo.save();
         return todo;
     }
 
     @Override
-    public List<Todo> all()
+    public List<TodoDTO> all()
     {
         User user = getOrCreateUser(ao, currentUserName());
-        return newArrayList(ao.find(Todo.class, Query.select().where("USER_ID = ?", user.getID())));
+        List<Todo> todoList =newArrayList(ao.find(Todo.class, Query.select().where("USER_ID = ?", user.getID())));
+        List<TodoDTO> todoDTOList = new ArrayList<>();
+
+        for (Todo todo : todoList) {
+            TodoDTO todoDTO = new TodoDTO();
+            todoDTO.setId(todo.getID());
+            todoDTO.setDescription(todo.getDescription());
+            todoDTO.setComplete(todo.isComplete());
+            // Thiết lập các thuộc tính khác của TodoDTO (nếu có)
+            todoDTOList.add(todoDTO);
+        }
+
+        return todoDTOList;
     }
+
+    @Override
+    public void delete(long todoId) {
+        Todo[] todos = ao.find(Todo.class, Query.select().where("ID = ?", todoId));
+        Todo todo = todos.length > 0 ? todos[0] : null;
+        if (todo != null) {
+            ao.delete(todo);
+        }
+    }
+
+    @Override
+    public void update(long todoId, String newDescription) {
+        Todo[] todos = ao.find(Todo.class, Query.select().where("ID = ?", todoId));
+        Todo todo = todos.length > 0 ? todos[0] : null;
+        if (todo != null) {
+            todo.setDescription(newDescription);
+            todo.save();
+        }
+    }
+
+    @Override
+    public List<Todo> searchByDescription(String searchQuery)
+    {
+        User user = getOrCreateUser(ao, currentUserName());
+        String query = "USER_ID = ? AND DESCRIPTION LIKE ?";
+        String searchParam = "%" + searchQuery + "%";
+        return newArrayList(ao.find(Todo.class, Query.select().where(query, user.getID(), searchParam)));
+    }
+
 
     private String currentUserName() {
         return userManager.getRemoteUser().getUsername();

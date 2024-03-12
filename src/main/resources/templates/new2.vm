@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos</title>
+    <link rel="stylesheet" href="http://yourwebsite.com/resources/css/style.css">
+    <style>
+        .todo-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .todo-item-description {
+            flex-grow: 1;
+        }
+
+        .todo-item-header {
+            font-weight: bold;
+        }
+
+        .todo-item-action {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Todos (${username})</h1>
+
+<!-- Form to post more TODOs -->
+<form action="/todoAdd" method="POST">
+    <label for="description">Description:</label>
+    <input type="text" name="description" id="description" required>
+    <button type="submit">Add Todo</button>
+</form>
+
+<ul class="todo-list">
+    #foreach($todo in $todos)
+        <li class="todo-item">
+##            <div class="todo-item-id" style="width: 70px;">$todo.getID()</div>
+            <div class="todo-item-description" style="flex-grow: 0.1;">$todo.getDescription()</div>
+
+            <!-- Update button -->
+            <div class="todo-item-action">
+                <input type="button" name="submit" value="Update" onclick="openModal($todo.getID(), '$todo.getDescription()')"/>
+            </div>
+
+            <!-- Delete button -->
+            <div class="todo-item-action">
+                <input type="button" name="submit" value="Delete" onclick="openDeleteModal($todo.getID())"/>
+            </div>
+        </li>
+    #end
+</ul>
+
+<!-- Go to Jira Software button -->
+<ul>
+    <li style="margin-top: 10px; margin-bottom: 20px;">
+        <a href="http://localhost:8080/plugins/servlet/upm?source=side_nav_manage_addons" style="color: white;
+        background-color: #007bff; padding: 5px 10px; border-radius: 5px;">Go to Jira Software</a>
+    </li>
+</ul>
+
+<!-- List Description button -->
+<ul>
+    <li>
+        <a href="http://localhost:8080/plugins/servlet/todo/list" style="color: white; background-color: #800080;
+         padding: 5px 10px; border-radius: 5px;">List Description</a>
+    </li>
+</ul>
+</body>
+</html>

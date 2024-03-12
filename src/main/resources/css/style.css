@@ -1,0 +1,24 @@
+.todo-item {
+    display: flex;
+    align-items: center;
+}
+
+.todo-item-description {
+    flex-grow: 1;
+}
+
+.todo-item-header {
+    font-weight: bold;
+    text-align: center;
+}
+
+.todo-item-action {
+    margin-left: 10px;
+}
+
+.action-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}

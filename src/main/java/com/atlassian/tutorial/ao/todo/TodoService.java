@@ -7,7 +7,13 @@ import java.util.List;
 @Transactional
 public interface TodoService
 {
-    Todo add(String description, String summary);
+    Todo add(String description);
 
-    List<Todo> all();
+    List<TodoDTO> all();
+
+    void delete(long todoId);
+
+    void update(long todoId, String newDescription);
+
+    List<Todo> searchByDescription(String searchQuery);
 }
