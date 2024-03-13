@@ -47,7 +47,7 @@
   </web-item>
   <ao key="ao-module">
     <description>The module configuring the Active Objects service used by this plugin</description>
-    <entity>com.atlassian.tutorial.ao.todo.Todo</entity>
+    <entity>com.atlassian.tutorial.ao.todo.model.Todo</entity>
     <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v1.TodoUpgradeTask001</upgradeTask>
     <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v2.TodoUpgradeTask002</upgradeTask>
   </ao>
@@ -62,4 +62,8 @@
   <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource" version="1.0">
     <description key="my-rest-resource.description">The My Rest Resource Plugin</description>
   </rest>
+  <rest name="Todo API" i18n-name-key="todo-api.name" key="todo-api" path="/todo" version="1.0">
+    <description key="todo-api.description">API to manage Todo items</description>
+  </rest>
+
 </atlassian-plugin>

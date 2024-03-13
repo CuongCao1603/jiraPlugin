@@ -1,9 +1,9 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.atlassian.tutorial.ao.todo.Todo" %>
+<%@ page import="com.atlassian.tutorial.ao.todo.model.TodoMo" %>
 
 <%
-    List<Todo> todos = (List<Todo>) request.getAttribute("todos");
-    for (Todo todo : todos) {
+    List<TodoMo> todos = (List<TodoMo>) request.getAttribute("todos");
+    for (TodoMo todo : todos) {
         out.println("<p>" + todo.getDescription() + "</p>");
     }
 %>

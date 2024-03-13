@@ -1,14 +1,13 @@
 package com.atlassian.tutorial.ao.todo;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 
-import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.security.request.RequestMethod;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import com.atlassian.tutorial.ao.todo.dto.TodoDto;
+import com.atlassian.tutorial.ao.todo.service.TodoService;
 
 
 @SupportedMethods({RequestMethod.POST, RequestMethod.PUT, RequestMethod.GET})
@@ -19,7 +18,7 @@ public class GlobalAdminAction extends JiraWebActionSupport{
 
 //    private final TodoMapper todoMapper;
     private final TodoService todoService;
-    public List<TodoDTO> todolist;
+    public List<TodoDto> todolist;
 //    public List<TodoDTO> todoDTOSMapper;
 
     // Inject TemplateRenderer qua constructor
@@ -32,7 +31,7 @@ public class GlobalAdminAction extends JiraWebActionSupport{
     @Override
     public String execute() throws Exception {
         try {
-            setTodolist(todoService.all());
+//            setTodolist(todoService.getAllTodos());
 //            for (Todo t :
 //                    todolist) {
 //                todoDTOSMapper.add(TodoMapper.mapTodoToDTO(t));
@@ -66,7 +65,7 @@ public class GlobalAdminAction extends JiraWebActionSupport{
 
 
     public String doList() {
-        todolist = todoService.all();
+//        todolist = todoService.all();
         return "success";
     }
 
@@ -80,10 +79,10 @@ public class GlobalAdminAction extends JiraWebActionSupport{
 //        newTodo.setDescription(description);
 //        newTodo.setComplete(false);
 
-        // Thêm Todo mới vào todoService
-        if(null!=todoService.add(description)){
-            return "success";
-        }
+//        // Thêm Todo mới vào todoService
+//        if(null!=todoService.add(description)){
+//            return "success";
+//        }
         return "error";
     }
 
@@ -101,7 +100,7 @@ public class GlobalAdminAction extends JiraWebActionSupport{
 //        todoToUpdate.setComplete(false);
 
         // Cập nhật Todo trong todoService
-        todoService.update(todoId,description);
+//        todoService.update(todoId,description);
 
         return "success";
     }
@@ -110,16 +109,16 @@ public class GlobalAdminAction extends JiraWebActionSupport{
         // Lấy thông tin từ request parameter
         long todoId = Long.parseLong(getHttpRequest().getParameter("todoId"));
 
-        // Xóa Todo từ todoService
-        todoService.delete(todoId);
+//        // Xóa Todo từ todoService
+//        todoService.delete(todoId);
 
         return "success";
     }
 
-    public List<TodoDTO> getTodos() {
+    public List<TodoDto> getTodos() {
         return todolist;
     }
-    public void setTodolist(List<TodoDTO> todolist) {
+    public void setTodolist(List<TodoDto> todolist) {
         this.todolist = todolist;
     }
 }

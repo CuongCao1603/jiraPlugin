@@ -1,4 +1,4 @@
-package com.atlassian.tutorial.ao.todo.rest;
+package com.atlassian.tutorial.ao.todo.model;
 
 import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "message")
@@ -8,6 +8,9 @@ public class MyRestResourceModel {
     @XmlElement(name = "value")
     private String message;
 
+    @XmlAttribute
+    private String key;
+
     public MyRestResourceModel() {
     }
 
@@ -15,6 +18,17 @@ public class MyRestResourceModel {
         this.message = message;
     }
 
+    public MyRestResourceModel(String key, String message) {
+        this.key = key;
+        this.message = message;
+    }
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
     public String getMessage() {
         return message;
     }

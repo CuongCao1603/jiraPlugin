@@ -1,4 +1,4 @@
-package com.atlassian.tutorial.ao.todo;
+package com.atlassian.tutorial.ao.todo.model;
 
 import net.java.ao.Entity;
 import net.java.ao.Preload;
@@ -23,4 +23,5 @@ public interface Todo extends Entity
     boolean isComplete();
 
     void setComplete(boolean complete);
+
 }

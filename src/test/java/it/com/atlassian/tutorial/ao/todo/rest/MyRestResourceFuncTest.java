@@ -3,11 +3,10 @@ package it.com.atlassian.tutorial.ao.todo.rest;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-import org.mockito.Mockito;
+
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import com.atlassian.tutorial.ao.todo.rest.MyRestResource;
-import com.atlassian.tutorial.ao.todo.rest.MyRestResourceModel;
+
+import com.atlassian.tutorial.ao.todo.model.MyRestResourceModel;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
 
