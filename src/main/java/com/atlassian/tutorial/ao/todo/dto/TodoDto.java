@@ -2,8 +2,14 @@ package com.atlassian.tutorial.ao.todo.dto;
 
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.tutorial.ao.todo.model.Todo;
+//import lombok.AllArgsConstructor;
+//import lombok.Builder;
+//import lombok.RequiredArgsConstructor;
 
 @Scanned
+//@Builder
+//@AllArgsConstructor
+//@RequiredArgsConstructor
 public class TodoDto {
     private int id;
     private String username;
@@ -11,7 +17,7 @@ public class TodoDto {
     private String description;
     private boolean isComplete;
 
-    // Constructor mặc định
+//     Constructor mặc định
     public TodoDto() {
     }
 

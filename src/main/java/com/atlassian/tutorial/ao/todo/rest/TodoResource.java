@@ -5,8 +5,8 @@ import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.atlassian.tutorial.ao.todo.dto.TodoDto;
 import com.atlassian.tutorial.ao.todo.model.Todo;
 import com.atlassian.tutorial.ao.todo.service.TodoService;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.LogManager;
+//import org.apache.log4j.Logger;
 
 
 import javax.ws.rs.*;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Scanned
 @Path("/todo")
 public class TodoResource {
-    private static final Logger log = LogManager.getLogger(TodoResource.class);
+//    private static final Logger log = LogManager.getLogger(TodoResource.class);
     private final TodoService todoService;
 
     public TodoResource(TodoService todoService) {
@@ -34,31 +34,31 @@ public class TodoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllTodos() {
         try {
-            List<Todo> todos = todoService.getAllTodos();
-            log.info("Number of Todos: " + todos.size()); // Ghi log số lượng Todo
-
-            List<TodoDto> todoDtos = todos.stream()
-                    .map(todo -> {
-                        TodoDto dto = new TodoDto(todo);
-                        log.info("Processing Todo: " + dto); // Ghi log mỗi TodoDto được xử lý
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-
-            log.info("Number of TodoDtos: " + todoDtos.size()); // Ghi log số lượng TodoDto sau khi xử lý
-            return Response.ok(todoDtos).build();
 //            List<Todo> todos = todoService.getAllTodos();
-//            List<String> test = new ArrayList<>();
-//            for (Todo t :
-//                    todos) {
+//            log.info("Number of Todos: " + todos.size()); // Ghi log số lượng Todo
 //
-//                test.add(t.getDescription());
-//            }
-//            // Chuyển đổi từ List<Todo> sang List<TodoDto> để trả về
 //            List<TodoDto> todoDtos = todos.stream()
-//                    .map(todo -> new TodoDto(todo)) // Giả sử bạn có constructor phù hợp trong TodoDto
+//                    .map(todo -> {
+//                        TodoDto dto = new TodoDto(todo);
+//                        log.info("Processing Todo: " + dto); // Ghi log mỗi TodoDto được xử lý
+//                        return dto;
+//                    })
 //                    .collect(Collectors.toList());
-//            return Response.ok(test).build();
+//
+//            log.info("Number of TodoDtos: " + todoDtos.size()); // Ghi log số lượng TodoDto sau khi xử lý
+//            return Response.ok(todoDtos).build();
+            List<Todo> todos = todoService.getAllTodos();
+            List<String> test = new ArrayList<>();
+            for (Todo t :
+                    todos) {
+
+                test.add(t.getDescription());
+            }
+            // Chuyển đổi từ List<Todo> sang List<TodoDto> để trả về
+            List<TodoDto> todoDtos = todos.stream()
+                    .map(todo -> new TodoDto(todo)) // Giả sử bạn có constructor phù hợp trong TodoDto
+                    .collect(Collectors.toList());
+            return Response.ok(todoDtos).build();
         } catch (Exception ex) {
             StringWriter errors = new StringWriter();
             ex.printStackTrace(new PrintWriter(errors));
