@@ -91,8 +91,8 @@ public class TodoResource {
     public Response createTodo(TodoDto todoDto) {
         try {
             Todo todo = todoService.createTodo(
-//                    todoDto.getUserId(),
-                    todoDto.getUsername(),
+                    todoDto.getUserId(),
+//                    todoDto.getUsername(),
                     todoDto.getSummary(),
                     todoDto.getDescription(),
                     todoDto.isComplete());
@@ -129,7 +129,7 @@ public class TodoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTodo(@PathParam("id") int id, TodoDto todoDto) {
         boolean success = todoService.updateTodo(id,
-                todoDto.getUsername(),
+                todoDto.getUserId(),
                 todoDto.getSummary(),
                 todoDto.getDescription(),
                 todoDto.isComplete());

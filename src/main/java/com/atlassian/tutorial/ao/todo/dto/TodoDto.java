@@ -22,7 +22,7 @@ public class TodoDto {
 
     @JsonProperty("user_id")
     private int userId;
-    private String username;
+//    private String username;
     private String summary;
     private String description;
     private boolean isComplete;
@@ -36,8 +36,9 @@ public class TodoDto {
         this.id = (int) todo.getID(); // Đảm bảo rằng có phương thức getID() hoặc tương tự
         // Lưu ý: Dựa vào cách bạn thiết kế User, bạn có thể cần điều chỉnh việc lấy username
         // Nếu User là một phần của model Active Objects, bạn cần đảm bảo rằng có phương thức phù hợp để lấy username
-        this.username = todo.getUser() != null ? todo.getUser().getName() : null; // Giả định User có phương thức getName()
-        this.userId = todo.getUser().getID();
+//        this.username = todo.getUser() != null ? todo.getUser().getName() : null; // Giả định User có phương thức getName()
+//        this.userId = todo.getUser().getID();
+        this.userId = todo.getUserId();
         this.summary = todo.getSummary();
         this.description = todo.getDescription();
         this.isComplete = todo.isComplete();
@@ -53,14 +54,14 @@ public class TodoDto {
         this.id = id;
     }
 
-    @JsonProperty("username")
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+//    @JsonProperty("username")
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 
     @JsonProperty("summary")
     public String getSummary() {
@@ -93,7 +94,7 @@ public class TodoDto {
     public String toString() {
         return "TodoDto{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+//                ", username='" + username + '\'' +
                 ", summary='" + summary + '\'' +
                 ", description='" + description + '\'' +
                 ", isComplete=" + isComplete +

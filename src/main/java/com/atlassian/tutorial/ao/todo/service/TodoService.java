@@ -11,14 +11,14 @@ import java.util.List;
 @Transactional
 public interface TodoService {
     Todo createTodo(
-//            int userId,
-            String user,
+            int userId,
+//            String user,
             String summary, String description, boolean isComplete);
 
     Todo getTodoById(int id);
 
     Boolean updateTodo(int id,
-                       String user,
+                       int userId,
                        String summary, String description, boolean isComplete);
 
     boolean deleteTodo(int id);

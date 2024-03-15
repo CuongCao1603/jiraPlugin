@@ -12,13 +12,13 @@ public interface Todo extends Entity
 {
 //    @JsonProperty("user_id")
     void setUserId(int userId);
-    User getUserId();
+    int getUserId();
 //    @NotNull
-    void setUser(String username);
-
-//    @NotNull
-//    @OneToMany
-    User getUser();
+//    void setUser(String username);
+//
+////    @NotNull
+////    @OneToMany
+//    User getUser();
 
     void setSummary(String summary);
     String getSummary();

@@ -47,15 +47,15 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo createTodo(
-//            int userId,
-            String username,
+            int userId,
+//            String username,
             String summary, String description, boolean isComplete) {
-        User user = userService.findUserByName(username);
-        int userId = user.getID();
+        User user = userService.findUserById(userId);
+        int getUserId = user.getID();
         return ao.executeInTransaction(() -> {
             Todo todo = ao.create(Todo.class);
-            todo.setUserId(userId);
-            todo.setUser(username);
+            todo.setUserId(getUserId);
+//            todo.setUser(username);
             todo.setSummary(summary);
             todo.setDescription(description);
             todo.setComplete(isComplete);
@@ -71,13 +71,13 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Boolean updateTodo(int id,
-                              String username,
+                              int  userId,
                               String summary, String description, boolean isComplete) {
         return ao.executeInTransaction(() -> {
             Todo todo = ao.get(Todo.class, id);
             if (todo != null) {
                 // Giả sử chúng ta đã sửa đổi model Todo để thuộc tính user là kiểu String
-                todo.setUser(username); // Set lại người dùng dựa vào username dạng String
+                todo.setUserId(userId); // Set lại người dùng dựa vào username dạng String
                 todo.setSummary(summary);
                 todo.setDescription(description);
                 todo.setComplete(isComplete);
