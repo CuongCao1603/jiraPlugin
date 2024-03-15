@@ -41,13 +41,7 @@ public class TodoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         try {
-            List<User> users = userService.findAllUsers();
-
-            // Chuyển đổi từ List<User> sang List<UserDto> để trả về
-            List<UserDto> userDtos = users.stream()
-                    .map(UserDto::new) // Sử dụng constructor của UserDto
-                    .collect(Collectors.toList());
-
+            List<UserDto> userDtos = userService.findAllUsers();
             // Trả về userDtos dưới dạng JSON
             return Response.ok(userDtos).build();
         } catch (Exception ex) {
@@ -64,13 +58,7 @@ public class TodoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllTodos() {
         try {
-            List<Todo> todos = todoService.getAllTodos();
-
-            // Chuyển đổi từ List<Todo> sang List<TodoDto> để trả về
-            List<TodoDto> todoDtos = todos.stream()
-                    .map(todo -> new TodoDto(todo)) // Giả sử bạn có constructor phù hợp trong TodoDto
-                    .collect(Collectors.toList());
-
+            List<TodoDto> todoDtos = todoService.getAllTodos();
             // Trả về todoDtos dưới dạng JSON
             return Response.ok(todoDtos).build();
         } catch (Exception ex) {
@@ -154,15 +142,15 @@ public class TodoResource {
     @AnonymousAllowed
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchTodosByUsername(@QueryParam("username") String username) {
+    public Response searchTodosByUsername(@QueryParam("summary") String summary) {
         try {
             // Giả sử todoService có phương thức searchTodosByUsername để tìm kiếm Todo theo username
-            List<Todo> todos = todoService.searchTodosByUsername(username);
+            List<TodoDto> todoDtos = todoService.searchTodosBySummary(summary);
 
-            // Chuyển đổi từ List<Todo> sang List<TodoDto> để trả về
-            List<TodoDto> todoDtos = todos.stream()
-                    .map(todo -> new TodoDto(todo))
-                    .collect(Collectors.toList());
+//            // Chuyển đổi từ List<Todo> sang List<TodoDto> để trả về
+//            List<TodoDto> todoDtos = todos.stream()
+//                    .map(todo -> new TodoDto(todo))
+//                    .collect(Collectors.toList());
 
             // Trả về todoDtos dưới dạng JSON
             return Response.ok(todoDtos).build();
@@ -182,15 +170,14 @@ public class TodoResource {
     public Response getAllTodosPaged(@QueryParam("page") @DefaultValue("1") int page,
                                      @QueryParam("size") @DefaultValue("4") int size) {
         try {
-            List<TodoDto> todoDtos = todoService.getAllTodosPaged(page, size).stream()
-                    .map(TodoDto::new) // Giả sử bạn có constructor phù hợp trong TodoDto
-                    .collect(Collectors.toList());
+            List<TodoDto> todoDtos = todoService.getAllTodosPaged(page, size);
 
             return Response.ok(todoDtos).build();
         } catch (Exception ex) {
             StringWriter errors = new StringWriter();
             ex.printStackTrace(new PrintWriter(errors));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errors.toString()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(errors.toString()).build();
         }
     }
 

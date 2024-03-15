@@ -1,72 +1,431 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todos</title>
-    <link rel="stylesheet" href="http://yourwebsite.com/resources/css/style.css">
-    <style>
-        .todo-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .todo-item-description {
-            flex-grow: 1;
-        }
-
-        .todo-item-header {
-            font-weight: bold;
-        }
-
-        .todo-item-action {
-            margin-left: 10px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/ao-tutorial.css">
 </head>
 <body>
-<h1>Todos (${username})</h1>
+<h1>Todos</h1>
+<div id="notification"></div>
 
-<!-- Form to post more TODOs -->
-<form action="/todoAdd" method="POST">
-    <label for="description">Description:</label>
-    <input type="text" name="description" id="description" required>
+<!-- Form add new Todo -->
+<form id="addTodoForm" onsubmit="event.preventDefault(); createTodo();">
+    <input type="text" id="descriptionInput" placeholder="Description">
     <button type="submit">Add Todo</button>
 </form>
 
-<ul class="todo-list">
-    #foreach($todo in $todos)
-        <li class="todo-item">
-##            <div class="todo-item-id" style="width: 70px;">$todo.getID()</div>
-            <div class="todo-item-description" style="flex-grow: 0.1;">$todo.getDescription()</div>
+<!-- Form search Todo -->
+<form id="searchTodoForm" onsubmit="event.preventDefault(); searchTodoT();">
+    <input type="text" id="searchInput" placeholder="Search">
+    <button type="submit">Search</button>
+</form>
 
-            <!-- Update button -->
-            <div class="todo-item-action">
-                <input type="button" name="submit" value="Update" onclick="openModal($todo.getID(), '$todo.getDescription()')"/>
-            </div>
-
-            <!-- Delete button -->
-            <div class="todo-item-action">
-                <input type="button" name="submit" value="Delete" onclick="openDeleteModal($todo.getID())"/>
-            </div>
-        </li>
+<!-- List Todo -->
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Complete</th>
+        <th>Actions</th>
+    </tr>
+    #foreach($todo in $action.todos)
+        <tr>
+            <td>$todo.id</td>
+            <td>$todo.description</td>
+            <td>
+                #if($todo.isComplete())
+                    true
+                #end
+            </td>
+            <td>
+                <!-- Button Update Todo -->
+                <button type="button" onclick="openModal($todo.id)">Update</button>
+                <!-- Button Delete Todo -->
+                <button type="button" onclick="openDeleteModal($todo.id)">Delete</button>
+            </td>
+        </tr>
     #end
-</ul>
+</table>
 
-<!-- Go to Jira Software button -->
-<ul>
-    <li style="margin-top: 10px; margin-bottom: 20px;">
-        <a href="http://localhost:8080/plugins/servlet/upm?source=side_nav_manage_addons" style="color: white;
-        background-color: #007bff; padding: 5px 10px; border-radius: 5px;">Go to Jira Software</a>
-    </li>
-</ul>
+<!-- Modal update -->
+<div id="modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Form Update Todo  onsubmit="event.preventDefault(); updateTodo();" action="/secure/updateTodo.jspa"  method="POST"-->
+        <form id="updateTodoForm"  action="/secure/updateTodo.jspa"  method="POST">
+            <input type="hidden" id="todoId" name="todoId">
+            <input type="text" id="todoDescription" name="description">
+            <input type="checkbox" id="todoComplete" name="complete"> Complete
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
 
-<!-- List Description button -->
-<ul>
-    <li>
-        <a href="http://localhost:8080/plugins/servlet/todo/list" style="color: white; background-color: #800080;
-         padding: 5px 10px; border-radius: 5px;">List Description</a>
-    </li>
-</ul>
+<!-- Modal Delete -->
+<div id="deleteModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <p>Are you sure you want to delete this todo?</p>
+        <form id="deleteForm" action="/secure/deleteTodo.jspa" method="POST">
+            <input type="hidden" id="deleteTodoId" name="todoId">
+            <button type="submit">Yes</button>
+        </form>
+        <button onclick="closeDeleteModal()">No</button>
+    </div>
+</div>
+
+
+<!-- Danh sách Todo -->
+<div id="todoList"></div>
+
+<script>
+
+    function submitForm() {
+        event.preventDefault();
+        window.location.href = '/secure/updateTodo.jspa';
+    }
+    function openModal(todoId) {
+        document.getElementById("todoId").value = todoId;
+        document.getElementById("todoDescription").value = ""; // Set initial value for description
+        document.getElementById("todoComplete").checked = false; // Set initial value for complete
+        document.getElementById("modal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+
+    function confirmDeleteN() {
+        // Perform the DELETE request to /secure/deleteAction.jspa
+        fetch('/secure/deleteTodo.jspa', {
+            method: 'DELETE'
+        })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle successful deletion
+                        console.log("Todo successfully deleted!");
+                    } else {
+                        // Handle deletion failure
+                        console.log("Failed to delete todo.");
+                    }
+                })
+                .catch(error => {
+                    // Handle any errors that occurred during the request
+                    console.error("An error occurred while deleting todo:", error);
+                });
+    }
+
+    function getTodoList() {
+        var request = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        fetch("/rest/my-rest-endpoint/1.0/my-resource/get-todo-list", request)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Error getting Todo list");
+                    }
+                    return response.json();
+                })
+                .then(function(todos) {
+                    var table = document.querySelector("table");
+                    var tbody = table.querySelector("tbody");
+                    tbody.innerHTML = "";
+                    todos.forEach(function(todo) {
+                        var row = document.createElement("tr");
+                        var idCell = document.createElement("td");
+                        idCell.textContent = todo.id;
+                        row.appendChild(idCell);
+                        var descriptionCell = document.createElement("td");
+                        descriptionCell.textContent = todo.description;
+                        row.appendChild(descriptionCell);
+                        var completeCell = document.createElement("td");
+                        completeCell.textContent = todo.isComplete ? "Yes" : "No";
+                        row.appendChild(completeCell);
+                        var actionsCell = document.createElement("td");
+                        var updateButton = document.createElement("button");
+                        updateButton.textContent = "Update";
+                        updateButton.addEventListener("click", function() {
+                            openModal(todo.id);
+                        });
+                        actionsCell.appendChild(updateButton);
+                        var deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.addEventListener("click", function() {
+                            openDeleteModal(todo.id);
+                        });
+                        actionsCell.appendChild(deleteButton);
+                        row.appendChild(actionsCell);
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(function(error) {
+                    // Update the notification message with the error
+                    document.getElementById("notification").innerHTML = "Failed to get Todo list: " + error;
+                    console.error("Failed to get Todo list:", error);
+                });
+    }
+
+    function createTodo() {
+        var description = document.getElementById("descriptionInput").value;
+        var request = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(description)
+        };
+
+        fetch("/rest/my-rest-endpoint/1.0/my-resource/create-todo", request)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Error creating Todo");
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Update the notification message
+                    document.getElementById("notification").innerHTML = "Todo created successfully!";
+
+                    // Reload the page
+                    location.reload();
+                })
+                .catch(function(error) {
+                    // Update the notification message with the error
+                    document.getElementById("notification").innerHTML = "Failed to create Todo: " + error;
+                    console.error("Failed to create Todo:", error);
+                });
+    }
+
+    // Sử dụng JavaScript và AJAX để lấy danh sách và cập nhật giao diện người dùng
+    function updateTodoN() {
+        var todoId = document.getElementById("todoId").value;
+        var description = document.getElementById("todoDescription").value;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/secure/updateTodo.jspa", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Cập nhật giao diện người dùng khi thành công
+                    var response = xhr.responseText;
+                    if (response === "success") {
+                        getTodoList(); // Gọi hàm lấy danh sách sau khi cập nhật thành công
+                    } else {
+                        document.getElementById("notification").innerHTML = "Failed to update Todo: " + error;
+                        console.error("Failed to update Todo:", error);
+                    }
+                } else {
+                    document.getElementById("notification").innerHTML = "Failed to update Todo: " + error;
+                    console.error("Failed to update Todo:", error);
+                }
+            }
+        };
+        xhr.send("todoId=" + encodeURIComponent(todoId) + "&description=" + encodeURIComponent(description));
+    }
+
+    function updateTodo() {
+        var todoId = document.getElementById("todoId").value;
+        var description = document.getElementById("todoDescription").value;
+        var complete = document.getElementById("todoComplete").checked;
+
+        var request = {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                description: description,
+                complete: complete
+            })
+        };
+
+        fetch("/rest/my-rest-endpoint/1.0/my-resource/update-todo/" + $todoId, request)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Error updating Todo");
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Update the notification message
+                    document.getElementById("notification").innerHTML = "Todo updated successfully!";
+
+                    // Reload the page
+                    location.reload();
+                })
+                .catch(function(error) {
+                    // Update the notification message with the error
+                    document.getElementById("notification").innerHTML = "Failed to update Todo: " + error;
+                    console.error("Failed to update Todo:", error);
+                });
+    }
+
+    var deleteTodoId; // Lưu trữ ID của todo đang được xóa
+
+    function openDeleteModal(todoId) {
+        document.getElementById("deleteTodoId").value = todoId;
+        document.getElementById("deleteModal").style.display = "block";
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+
+    function confirmDelete() {
+        closeDeleteModal();
+
+        // Gọi REST API để xóa todo
+        var request = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        fetch("/rest/my-rest-endpoint/1.0/my-resource/delete-todo/" + deleteTodoId, request)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Error deleting Todo");
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Update the notification message
+                    document.getElementById("notification").innerHTML = "Todo deleted successfully!";
+
+                    // Reload the page
+                    location.reload();
+                })
+                .catch(function(error) {
+                    // Update the notification message with the error
+                    document.getElementById("notification").innerHTML = "Failed to delete Todo: " + error;
+                    console.error("Failed to delete Todo:", error);
+                });
+    }
+
+    function searchTodo() {
+
+        var searchValue = document.getElementById("searchInput").value;
+        var request = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        fetch("/rest/my-rest-endpoint/1.0/my-resource/search?keyword=" + searchValue, request)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Error searching Todos");
+                    }
+                    return response.json();
+                })
+                .then(function(todos) {
+                    todos.forEach(function($todo) {
+                        var todoElement = document.createElement("p");
+                        todoElement.textContent = $todo.toString();
+                        document.body.appendChild(todoElement); // Append to the body element
+                    });
+                })
+                .catch(function(error) {
+                    // Update the notification message with the error
+                    document.getElementById("notification").innerHTML = "Failed to search Todos: " + error;
+                    console.error("Failed to search Todos:", error);
+                });
+    }
+    function searchTodoT() {
+        var searchValue = document.getElementById("searchInput").value;
+        var request = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        fetch("/rest/my-rest-endpoint/1.0/my-resource/search?keyword=" + searchValue, request)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Error searching Todos");
+                    }
+                    return response.json();
+                })
+                .then(function(todos) {
+                    var table = document.querySelector("table");
+                    var tbody = table.querySelector("tbody");
+                    tbody.innerHTML = "";
+                    todos.forEach(function(todo) {
+                        var row = document.createElement("tr");
+                        var idCell = document.createElement("td");
+                        idCell.textContent = todo.id;
+                        row.appendChild(idCell);
+                        var descriptionCell = document.createElement("td");
+                        descriptionCell.textContent = todo.description;
+                        row.appendChild(descriptionCell);
+                        var completeCell = document.createElement("td");
+                        completeCell.textContent = todo.complete ? "Yes" : "No";
+                        row.appendChild(completeCell);
+                        var actionsCell = document.createElement("td");
+                        var updateButton = document.createElement("button");
+                        updateButton.textContent = "Update";
+                        updateButton.addEventListener("click", function() {
+                            openModal(todo.id);
+                        });
+                        actionsCell.appendChild(updateButton);
+                        var deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.addEventListener("click", function() {
+                            openDeleteModal(todo.id);
+                        });
+                        actionsCell.appendChild(deleteButton);
+                        row.appendChild(actionsCell);
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(function(error) {
+                    // Update the notification message with the error
+                    document.getElementById("notification").innerHTML = "Failed to search Todos: " + error;
+                    console.error("Failed to search Todos:", error);
+                });
+    }
+
+    function searchTodoS() {
+        var searchQuery = document.getElementById("searchInput").value;
+        var url = "/api/todos?query=" + encodeURIComponent(searchQuery);
+
+        // Gửi yêu cầu AJAX để tìm kiếm Todo
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var todos = JSON.parse(xhr.responseText);
+                renderTodos(todos); // Gọi hàm renderTodos để hiển thị danh sách Todo
+            }
+        };
+        xhr.send();
+    }
+
+    function renderTodos(todos) {
+        var todoList = document.getElementById("todoList");
+        todoList.innerHTML = ""; // Xóa nội dung cũ
+
+        for (var i = 0; i < todos.length; i++) {
+            var todo = todos[i];
+
+            // Tạo phần tử HTML để hiển thị thông tin của Todo
+            var todoItem = document.createElement("div");
+            todoItem.innerHTML = "<p>ID: " + todo.id + "</p>" +
+                    "<p>Description: " + todo.description + "</p>" +
+                    "<p>Complete: " + (todo.complete ? "Yes" : "No") + "</p>";
+
+            // Thêm Todo vào danh sách
+            todoList.appendChild(todoItem);
+        }
+    }
+
+
+</script>
 </body>
 </html>

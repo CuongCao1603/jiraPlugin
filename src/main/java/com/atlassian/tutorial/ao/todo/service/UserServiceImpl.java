@@ -3,6 +3,7 @@ package com.atlassian.tutorial.ao.todo.service;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.atlassian.tutorial.ao.todo.dto.UserDto;
 import com.atlassian.tutorial.ao.todo.model.User;
 import net.java.ao.Query;
 
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Scanned
 @Named
@@ -50,7 +52,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return Arrays.asList(ao.find(User.class, Query.select()));
+    public List<UserDto> findAllUsers() {
+        List<User> users =  Arrays.asList(ao.find(User.class, Query.select()));
+        return users.stream()
+                .map(UserDto::new) // Sử dụng constructor của UserDto
+                .collect(Collectors.toList());
     }
 }

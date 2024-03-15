@@ -3,6 +3,7 @@ package com.atlassian.tutorial.ao.todo.service;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.user.UserManager;
+import com.atlassian.tutorial.ao.todo.dto.TodoDto;
 import com.atlassian.tutorial.ao.todo.model.Todo;
 import com.atlassian.tutorial.ao.todo.model.User;
 import com.google.common.collect.ImmutableMap;
@@ -13,6 +14,7 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
@@ -39,10 +41,13 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public List<Todo> getAllTodos() {
-        return ao.executeInTransaction(() ->
+    public List<TodoDto> getAllTodos() {
+        List<Todo> todos = ao.executeInTransaction(() ->
                 Arrays.asList(ao.find(Todo.class)));
 
+        return todos.stream()
+                .map(todo -> new TodoDto(todo)) // Giả sử bạn có constructor phù hợp trong TodoDto
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,7 +76,7 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Boolean updateTodo(int id,
-                              int  userId,
+                              int userId,
                               String summary, String description, boolean isComplete) {
         return ao.executeInTransaction(() -> {
             Todo todo = ao.get(Todo.class, id);
@@ -120,10 +125,23 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public List<Todo> getAllTodosPaged(int pageNumber, int pageSize) {
+    public List<TodoDto> getAllTodosPaged(int pageNumber, int pageSize) {
         // Tính toán offset dựa trên số trang và kích thước trang
         int offset = (pageNumber - 1) * pageSize;
-        return Arrays.asList(ao.find(Todo.class, Query.select().limit(pageSize).offset(offset)));
+        List<Todo> todos = Arrays.asList(ao.find(Todo.class, Query.select().limit(pageSize).offset(offset)));
+        return todos.stream()
+                .map(todo -> new TodoDto(todo)) // Giả sử bạn có constructor phù hợp trong TodoDto
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TodoDto> searchTodosBySummary(String summary) {
+        // Use Active Objects to find Todo items where the summary contains the specified text.
+        // The '%' symbols are used for SQL LIKE wildcard searches, allowing for any characters to be present before and after the specified summary text.
+        List<Todo> todos = Arrays.asList(ao.find(Todo.class, Query.select().where("SUMMARY LIKE ?", "%" + summary + "%")));
+        return todos.stream()
+                .map(todo -> new TodoDto(todo))
+                .collect(Collectors.toList());
     }
 
 

@@ -1,4 +1,4 @@
-package com.atlassian.tutorial.ao.todo;
+package com.atlassian.tutorial.ao.todo.actions;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 
 import java.util.List;

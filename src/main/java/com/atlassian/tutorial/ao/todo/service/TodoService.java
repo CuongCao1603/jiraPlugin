@@ -3,6 +3,7 @@ package com.atlassian.tutorial.ao.todo.service;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
+import com.atlassian.tutorial.ao.todo.dto.TodoDto;
 import com.atlassian.tutorial.ao.todo.model.Todo;
 
 import java.util.List;
@@ -23,13 +24,14 @@ public interface TodoService {
 
     boolean deleteTodo(int id);
 
-    List<Todo> getAllTodos();
+    List<TodoDto> getAllTodos();
 
     List<Todo> searchByDescription(String searchQuery);
 
 
     List<Todo> searchTodosByUsername(String username);
 
-    List<Todo> getAllTodosPaged(int pageNumber, int pageSize);
+    List<TodoDto> getAllTodosPaged(int pageNumber, int pageSize);
 
+    List<TodoDto> searchTodosBySummary(String summary);
 }

@@ -1,69 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
-  <plugin-info>
-    <description>${project.description}</description>
-    <version>${project.version}</version>
-    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
-    <param name="plugin-icon">images/pluginIcon.png</param>
-    <param name="plugin-logo">images/pluginLogo.png</param>
-  </plugin-info>
-  <!-- add our i18n resource -->
-  <resource type="i18n" name="i18n" location="ao-tutorial"/>
-  <!-- add our web resources -->
-  <web-resource key="ao-tutorial-resources" name="ao-tutorial Web Resources">
-    <dependency>com.atlassian.auiplugin:ajs</dependency>
-    <resource type="download" name="ao-tutorial.css" location="/css/ao-tutorial.css"/>
-    <resource type="download" name="style.css" location="/css/style.css"/>
-    <resource type="download" name="ao-tutorial.js" location="/js/ao-tutorial.js"/>
-    <resource type="download" name="images/" location="/images"/>
-    <resource type="download" name="edit.jsp" location="/templates/edit.jsp"/>
-    <resource type="download" name="new2.vm" location="/templates/new2.vm"/>
-    <context>ao-tutorial</context>
-  </web-resource>
-  <webwork1 key="newactions" name="New actions" class="java.lang.Object">
-    <description>Global Admin Action</description>
-    <actions>
-      <action name="com.atlassian.tutorial.ao.todo.GlobalAdminAction" alias="GlobalAdministration">
-        <view name="success">/templates/new2.vm</view>
-      </action>
-    </actions>
-  </webwork1>
-  <!--  <web-section key="global-admin-section"
-      name="Global Admin Section" i18n-name-key="global-admin-section.name"
-      location="system.admin.top.navigation.bar">
-      <label key="Global admin management" />
-      <description key="global-admin-section.description" />
-  </web-section>
-  <web-item key="global-admin-tab"
-      section="global-admin-section" weight="100">
-      <label key="global-admin-tab.label" />
-      <link>/secure/GlobalAdministration.jspa</link>
-  </web-item>
-  -->
-  <web-item key="my-custom-button2" name="My Custom Button2" section="system.top.navigation.bar" weight="100">
-    <label>Custom Button2</label>
-    <link>/secure/GlobalAdministration.jspa</link>
-  </web-item>
-  <ao key="ao-module">
-    <description>The module configuring the Active Objects service used by this plugin</description>
-    <entity>com.atlassian.tutorial.ao.todo.model.Todo</entity>
-    <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v1.TodoUpgradeTask001</upgradeTask>
-    <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v2.TodoUpgradeTask002</upgradeTask>
-  </ao>
-  <servlet name="Todo List &amp; Add Servlet" class="com.atlassian.tutorial.ao.todo.TodoServlet" key="todo-list">
-    <description>A servlet to add and list todos</description>
-    <url-pattern>/todo/list</url-pattern>
-  </servlet>
-  <web-item key="my-custom-button" name="My Custom Button" section="system.top.navigation.bar" weight="100">
-    <label>Custom Button Frist</label>
-    <link>/plugins/servlet/todo/list</link>
-  </web-item>
-  <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource" version="1.0">
-    <description key="my-rest-resource.description">The My Rest Resource Plugin</description>
-  </rest>
-  <rest name="Todo API" i18n-name-key="todo-api.name" key="todo-api" path="/todo" version="1.0">
-    <description key="todo-api.description">API to manage Todo items</description>
-  </rest>
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ao-tutorial"/>
+    <!-- add our web resources -->
+    <web-resource key="ao-tutorial-resources" name="ao-tutorial Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource type="download" name="ao-tutorial.css" location="/css/ao-tutorial.css"/>
+        <resource type="download" name="style.css" location="/css/style.css"/>
+        <resource type="download" name="ao-tutorial.js" location="/js/ao-tutorial.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <resource type="download" name="edit.jsp" location="/templates/edit.jsp"/>
+        <resource type="download" name="new2.vm" location="/templates/new2.vm"/>
+        <context>ao-tutorial</context>
+    </web-resource>
+    <webwork1 key="newactions" name="New actions" class="java.lang.Object">
+        <description>Global Admin Action</description>
+        <actions>
+            <action name="com.atlassian.tutorial.ao.todo.actions.TodoAction"
+                    alias="Todo">
+                <view name="success">/templates/new2.vm</view>
+                <view name="error">/templates/error.vm</view>
+            </action>
+            <action name="com.atlassian.tutorial.ao.todo.actions.UpdateTodoAction"
+                    alias="updateTodo">
+                <view name="success">/templates/new2.vm</view>
+                <view name="error">/templates/error.vm</view>
+            </action>
+            <action name="com.atlassian.tutorial.ao.todo.actions.DeleteTodoAction"
+                    alias="deleteTodo">
+                <view name="success">/templates/new2.vm</view>
+                <view name="error">/templates/error.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+    <!--  <web-section key="global-admin-section"
+        name="Global Admin Section" i18n-name-key="global-admin-section.name"
+        location="system.admin.top.navigation.bar">
+        <label key="Global admin management" />
+        <description key="global-admin-section.description" />
+    </web-section>
+    <web-item key="global-admin-tab"
+        section="global-admin-section" weight="100">
+        <label key="global-admin-tab.label" />
+        <link>/secure/GlobalAdministration.jspa</link>
+    </web-item>
+    -->
+    <web-item key="my-custom-button2" name="My Custom Button2"
+              section="system.top.navigation.bar" weight="100">
+        <label>Custom Button2</label>
+        <link>/secure/Todo.jspa</link>
+    </web-item>
+    <ao key="ao-module">
+        <description>The module configuring the Active Objects service used by this plugin</description>
+        <entity>com.atlassian.tutorial.ao.todo.model.Todo</entity>
+        <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v1.TodoUpgradeTask001</upgradeTask>
+        <upgradeTask>com.atlassian.tutorial.ao.todo.upgrade.v2.TodoUpgradeTask002</upgradeTask>
+    </ao>
+    <servlet name="Todo List &amp; Add Servlet" class="com.atlassian.tutorial.ao.todo.TodoServlet" key="todo-list">
+        <description>A servlet to add and list todos</description>
+        <url-pattern>/todo/list</url-pattern>
+    </servlet>
+    <web-item key="my-custom-button" name="My Custom Button" section="system.top.navigation.bar" weight="100">
+        <label>Custom Button Frist</label>
+        <link>/plugins/servlet/todo/list</link>
+    </web-item>
+    <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource"
+          version="1.0">
+        <description key="my-rest-resource.description">The My Rest Resource Plugin</description>
+    </rest>
+    <rest name="Todo API" i18n-name-key="todo-api.name" key="todo-api" path="/todo" version="1.0">
+        <description key="todo-api.description">API to manage Todo items</description>
+        <resource name="my-resource" class="com.atlassian.tutorial.ao.todo.TodoResource">
+            <method name="getAllTodos" key="get-todo-list" auth="none">
+                <request>
+                    <description>Get TODO list</description>
+                </request>
+                <response>
+                    <description>TODO list response</description>
+                </response>
+            </method>
+            <method name="createTodo" key="create-todo" auth="none">
+                <request>
+                    <description>Create a new TODO</description>
+                </request>
+                <response>
+                    <description>TODO creation response</description>
+                </response>
+            </method>
+            <method name="updateTodo" key="update-todo" auth="none">
+                <request>
+                    <description>Update a new TODO</description>
+                </request>
+                <response>
+                    <description>TODO update response</description>
+                </response>
+            </method>
+            <method name="deleteTodo" key="delete-todo" auth="none">
+                <request>
+                    <description>Delete a TODO</description>
+                </request>
+                <response>
+                    <description>TODO deletion response</description>
+                </response>
+            </method>
+            <method name="search" key="search" auth="none">
+                <request>
+                    <description>Search</description>
+                    <param name="keyword" type="query">
+                        <description>Search keyword</description>
+                    </param>
+                </request>
+                <response>
+                    <description>Search response</description>
+                </response>
+            </method>
+        </resource>
+    </rest>
 
 </atlassian-plugin>

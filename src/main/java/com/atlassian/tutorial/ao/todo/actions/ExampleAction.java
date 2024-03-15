@@ -1,4 +1,4 @@
-package com.atlassian.tutorial.ao.todo;
+package com.atlassian.tutorial.ao.todo.actions;
 
 import webwork.action.ActionSupport;
 
