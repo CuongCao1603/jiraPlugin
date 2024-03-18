@@ -25,9 +25,9 @@ public class DeleteTodoAction extends JiraWebActionSupport{
             // Lấy thông tin từ request parameter
             int todoId = Integer.parseInt(getHttpRequest().getParameter("id"));
 
-            // Xóa Todo từ todoService
-            todoService.deleteTodo(todoId);
-            setTodolist(todoService.getAllTodos());
+//            // Xóa Todo từ todoService
+//            todoService.deleteTodo(todoId);
+//            setTodolist(todoService.getAllTodos());
             return "success";
         } catch (Exception e) {
             // exception
@@ -42,4 +42,5 @@ public class DeleteTodoAction extends JiraWebActionSupport{
     public void setTodolist(List<TodoDto> todolist) {
         this.todolist = todolist;
     }
+
 }

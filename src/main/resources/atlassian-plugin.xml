@@ -41,6 +41,17 @@
             </action>
         </actions>
     </webwork1>
+
+    <webwork1 key="create-issue-action" name="Create Issue Action" class="com.atlassian.tutorial.ao.todo.actions.IssueAction">
+        <actions>
+            <action name="com.atlassian.tutorial.ao.todo.actions.IssueAction"
+                    alias="create-task">
+                <view name="success">/templates/createIssue.vm</view>
+                <view name="error">/templates/error.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+
     <!--  <web-section key="global-admin-section"
         name="Global Admin Section" i18n-name-key="global-admin-section.name"
         location="system.admin.top.navigation.bar">
@@ -53,11 +64,12 @@
         <link>/secure/GlobalAdministration.jspa</link>
     </web-item>
     -->
-    <web-item key="my-custom-button2" name="My Custom Button2"
+    <web-item key="create-task-issue" name="Create task issue"
               section="system.top.navigation.bar" weight="100">
-        <label>Custom Button2</label>
-        <link>/secure/Todo.jspa</link>
+        <label>Create task issue</label>
+        <link>/secure/create-task.jspa</link>
     </web-item>
+
     <ao key="ao-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>com.atlassian.tutorial.ao.todo.model.Todo</entity>
@@ -75,6 +87,19 @@
     <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource"
           version="1.0">
         <description key="my-rest-resource.description">The My Rest Resource Plugin</description>
+    </rest>
+    <rest name="Issue REST API" i18n-name-key="issue-rest.name" key="issue-rest" path="/api" version="2.0">
+        <description>My REST API </description>
+        <resource name="my-resource" class="com.atlassian.tutorial.ao.todo.rest.IssueResource">
+            <method name="getProjectInfo" key="get-project-info" auth="none">
+                <request>
+                    <description>Get project information</description>
+                </request>
+                <response>
+                    <description>Project information response</description>
+                </response>
+            </method>
+        </resource>
     </rest>
     <rest name="Todo API" i18n-name-key="todo-api.name" key="todo-api" path="/todo" version="1.0">
         <description key="todo-api.description">API to manage Todo items</description>

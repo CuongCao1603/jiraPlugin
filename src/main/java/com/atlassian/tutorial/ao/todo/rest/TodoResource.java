@@ -59,7 +59,6 @@ public class TodoResource {
     public Response getAllTodos() {
         try {
             List<TodoDto> todoDtos = todoService.getAllTodos();
-            // Trả về todoDtos dưới dạng JSON
             return Response.ok(todoDtos).build();
         } catch (Exception ex) {
             StringWriter errors = new StringWriter();
@@ -144,13 +143,7 @@ public class TodoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchTodosByUsername(@QueryParam("summary") String summary) {
         try {
-            // Giả sử todoService có phương thức searchTodosByUsername để tìm kiếm Todo theo username
             List<TodoDto> todoDtos = todoService.searchTodosBySummary(summary);
-
-//            // Chuyển đổi từ List<Todo> sang List<TodoDto> để trả về
-//            List<TodoDto> todoDtos = todos.stream()
-//                    .map(todo -> new TodoDto(todo))
-//                    .collect(Collectors.toList());
 
             // Trả về todoDtos dưới dạng JSON
             return Response.ok(todoDtos).build();

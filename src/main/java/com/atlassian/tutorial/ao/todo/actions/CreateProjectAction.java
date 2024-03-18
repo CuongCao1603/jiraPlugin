@@ -15,22 +15,22 @@ public class CreateProjectAction extends JiraWebActionSupport {
     // Phương thức để tạo dự án
     public String doCreateProject() {
         ApplicationUser user = getLoggedInUser();
-        ProjectService.CreateProjectValidationResult validationResult =
-                projectService.validateCreateProject(user,
-                        "New Project Key",
-                        "New Project Name",
-                        "Description",
-                        "Project Lead's Username",
-                        null,  // templateKey, sử dụng null để sử dụng mẫu mặc định
-                        null); // url
-
-        if (validationResult.isValid()) {
-            projectService.createProject(validationResult);
+//        ProjectService.CreateProjectValidationResult validationResult =
+//                projectService.validateCreateProject(user,
+//                        "New Project Key",
+//                        "New Project Name",
+//                        "Description",
+//                        "Project Lead's Username",
+//                        null,  // templateKey, sử dụng null để sử dụng mẫu mặc định
+//                        null); // url
+//
+//        if (validationResult.isValid()) {
+//            projectService.createProject(validationResult);
             return "success";
-        } else {
-            addErrorCollection(validationResult.getErrorCollection());
-            return "error";
-        }
+//        } else {
+//            addErrorCollection(validationResult.getErrorCollection());
+//            return "error";
+//        }
     }
 }
 
